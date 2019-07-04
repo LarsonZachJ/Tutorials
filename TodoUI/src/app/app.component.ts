@@ -30,6 +30,7 @@ export class AppComponent implements OnInit {
     this.todoTable.reset();
     this.booleanDropDown.selectedOption = this.emptySelectFilter;
     this.todoItemForm.reset();
+    this.todoItemForm.patchValue({ IsComplete: false });
   }
 
   public CreateTodoItem(): void {

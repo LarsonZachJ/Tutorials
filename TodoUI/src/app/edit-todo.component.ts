@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { TodoService, ToastService } from '@app/core';
 import { DynamicDialogRef, DynamicDialogConfig } from 'primeng/primeng';
 import { TodoItem } from '@app/shared';
@@ -8,15 +8,17 @@ import {
   FormControl,
   Validators
 } from '@angular/forms';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-edit-todo',
   templateUrl: './edit-todo.component.html',
   styleUrls: ['./edit-todo.component.scss']
 })
-export class EditTodoComponent implements OnInit {
+export class EditTodoComponent implements OnInit, OnDestroy {
   editTodoForm: FormGroup;
-
+  destroy$: Subject<boolean> = new Subject<boolean>();
   public UpdateTodoItem(): void {
     const item: TodoItem = {
       Id: this.editTodoForm.controls['Id'].value,
@@ -63,12 +65,20 @@ export class EditTodoComponent implements OnInit {
 
   ngOnInit(): void {
     this.BuildForm();
-    this._todoService.GetTodoItemById(this.config.data.id).subscribe(
-      res => {
-        this.FillInForm(res);
-      },
-      err => console.error(err)
-    );
+    this._todoService
+      .GetTodoItemById(this.config.data.id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(
+        res => {
+          this.FillInForm(res);
+        },
+        err => console.error(err)
+      );
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
   }
 
   constructor(

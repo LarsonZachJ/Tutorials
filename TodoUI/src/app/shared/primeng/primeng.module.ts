@@ -5,7 +5,8 @@ import {
   InputTextModule,
   DropdownModule,
   InputSwitchModule,
-  DialogService
+  DialogService,
+  FieldsetModule
 } from 'primeng/primeng';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
@@ -19,7 +20,8 @@ import { DynamicDialogModule } from 'primeng/components/dynamicdialog/dynamicdia
     InputTextModule,
     DropdownModule,
     InputSwitchModule,
-    DynamicDialogModule
+    DynamicDialogModule,
+    FieldsetModule
   ],
   providers: [MessageService, DialogService]
 })
