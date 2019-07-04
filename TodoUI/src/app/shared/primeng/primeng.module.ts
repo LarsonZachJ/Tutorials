@@ -4,10 +4,12 @@ import {
   ButtonModule,
   InputTextModule,
   DropdownModule,
-  InputSwitchModule
+  InputSwitchModule,
+  DialogService
 } from 'primeng/primeng';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
+import { DynamicDialogModule } from 'primeng/components/dynamicdialog/dynamicdialog';
 
 @NgModule({
   exports: [
@@ -16,15 +18,16 @@ import { ToastModule } from 'primeng/toast';
     TableModule,
     InputTextModule,
     DropdownModule,
-    InputSwitchModule
+    InputSwitchModule,
+    DynamicDialogModule
   ],
-  providers: [MessageService]
+  providers: [MessageService, DialogService]
 })
 export class PrimeNgModule {
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: PrimeNgModule,
-      providers: [MessageService]
+      providers: [MessageService, DialogService]
     };
   }
 }

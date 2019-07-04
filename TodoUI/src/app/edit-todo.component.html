@@ -1,0 +1,55 @@
+<form [formGroup]="editTodoForm" (ngSubmit)="UpdateTodoItem()">
+  <div id="EditTodoFormWrapper">
+    <div id="TodoIdWrapper">
+      <div id="TodoIdLabelWrapper">
+        <label for="TodoIdInput">Id</label>
+      </div>
+      <div id="TodoIdInputWrapper">
+        <input pInputText formControlName="Id" id="TodoIdInput" />
+      </div>
+    </div>
+    <div id="TodoNameWrapper">
+      <div id="TodoNameLabelWrapper">
+        <label for="TodoNameInput">Name</label>
+      </div>
+      <div id="TodoNameInputWrapper">
+        <input pInputText formControlName="Name" id="TodoNameInput" />
+      </div>
+    </div>
+    <div id="IsCompleteWrapper">
+      <div id="IsCompleteLabelWrapper">
+        <label for="IsCompleteInput">{{
+          editTodoForm.controls['IsComplete'].value ? 'Complete' : 'Incomplete'
+        }}</label>
+      </div>
+      <div id="IsCompleteInputWrapper">
+        <p-inputSwitch
+          formControlName="IsComplete"
+          id="IsCompleteInput"
+        ></p-inputSwitch>
+      </div>
+    </div>
+    <div id="ButtonWrapper">
+      <div id="UpdateButtonWrapper">
+        <button
+          pButton
+          type="submit"
+          label="Update"
+          icon="pi pi-refresh"
+          class="ui-button ui-button-raised ui-button-success"
+          [disabled]="!editTodoForm.valid"
+        ></button>
+      </div>
+      <div id="CancelButtonWrapper">
+        <button
+          pButton
+          type="button"
+          label="Cancel"
+          icon="pi pi-times"
+          class="ui-button ui-button-raised ui-button-secondary"
+          (click)="CancelEdit()"
+        ></button>
+      </div>
+    </div>
+  </div>
+</form>

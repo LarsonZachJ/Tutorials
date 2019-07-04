@@ -49,6 +49,7 @@
     [(selection)]="selectedTodoItem"
     dataKey="Id"
     #todoTable
+    (onRowSelect)="DisplayEditDialog($event)"
   >
     <ng-template pTemplate="header" let-columns>
       <tr>
