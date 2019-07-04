@@ -10,9 +10,10 @@ import { SharedModule } from './shared/shared.module';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/primeng';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { EditTodoComponent } from './edit-todo.component';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, EditTodoComponent],
   imports: [
     SharedModule,
     BrowserModule,
@@ -25,6 +26,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
     FormsModule
   ],
   providers: [MessageService],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [EditTodoComponent]
 })
 export class AppModule {}

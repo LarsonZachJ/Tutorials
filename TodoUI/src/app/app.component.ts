@@ -2,13 +2,14 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { TodoService, ToastService } from '@app/core';
 import { TodoItem, TableColumn } from '@app/shared';
 import { Table } from 'primeng/table';
-import { SelectItem, Dropdown } from 'primeng/primeng';
+import { SelectItem, Dropdown, DialogService } from 'primeng/primeng';
 import {
   FormBuilder,
   FormGroup,
   FormControl,
   Validators
 } from '@angular/forms';
+import { EditTodoComponent } from './edit-todo.component';
 
 @Component({
   selector: 'app-root',
@@ -62,6 +63,23 @@ export class AppComponent implements OnInit {
     );
   }
 
+  public DisplayEditDialog(): void {
+    const reference = this._dialogService.open(EditTodoComponent, {
+      data: { id: this.selectedTodoItem.Id },
+      header: 'Edit Todo Item',
+      width: '25%',
+      closable: false
+    });
+
+    reference.onClose.subscribe((todoItem: TodoItem) => {
+      if (todoItem) {
+        const index = this.todoItems.findIndex(t => t.Id === todoItem.Id);
+        this.todoItems[index] = todoItem;
+        this.todoItems = [...this.todoItems];
+      }
+    });
+  }
+
   ngOnInit(): void {
     this.BuildForm();
     this._todoService
@@ -93,6 +111,7 @@ export class AppComponent implements OnInit {
   constructor(
     private _todoService: TodoService,
     private _toastService: ToastService,
-    private _fb: FormBuilder
+    private _fb: FormBuilder,
+    private _dialogService: DialogService
   ) {}
 }

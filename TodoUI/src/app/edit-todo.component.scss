@@ -1,0 +1,40 @@
+#EditTodoFormWrapper {
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
+
+  #TodoIdWrapper {
+    grid-column: 1/2;
+    grid-row: 1;
+  }
+  #TodoNameWrapper {
+    grid-column: 1/2;
+    grid-row: 2;
+  }
+  #IsCompleteWrapper {
+    grid-column: 1/2;
+    grid-row: 3;
+  }
+  #ButtonWrapper {
+    grid-column: 1/2;
+    grid-row: 4;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+    grid-gap: 10px;
+  }
+  #CancelButtonWrapper {
+    grid-column: 1/2;
+    grid-row: 1;
+  }
+
+  #UpdateButtonWrapper {
+    grid-column: 2/3;
+    grid-row: 1;
+  }
+}
+button,
+input {
+  width: 100%;
+}
