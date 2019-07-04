@@ -1,13 +1,13 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "src",
+    "baseUrl": "./",
     "paths": {
       "@app/*": [
-        "app/*"
+        "src/app/*"
       ],
       "@env/*": [
-        "env/*"
+        "src/env/*"
       ]
     },
     "outDir": "./dist/out-tsc",

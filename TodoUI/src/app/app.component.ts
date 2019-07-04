@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TodoService } from './core';
+import { TodoService, ToastService } from '@app/core';
 import { Observable } from 'rxjs';
 import { TodoItem } from './shared';
 
@@ -14,7 +14,15 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.todoItems$ = this._todoService.GetAllTodoItems()
+
   }
 
-  constructor(private _todoService: TodoService) { }
+  public DisplayThings(): void {
+    this._toastService.DisplayError('Error', 'Error');
+    this._toastService.DisplayInfo('Info', 'Info');
+    this._toastService.DisplaySuccess('Success', 'Success');
+    this._toastService.DisplayWarn('Warn', 'Warn');
+  }
+
+  constructor(private _todoService: TodoService, private _toastService: ToastService) { }
 }
