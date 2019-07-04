@@ -1,46 +1,62 @@
 <p-toast></p-toast>
-<form [formGroup]="todoItemForm" (ngSubmit)="CreateTodoItem()">
-  <div id="TodoFormWrapper">
-    <div id="NameWrapper">
-      <div id="LabelWrapper">
-        <label for="Name">Name</label>
+<p-fieldset legend="Add Todo Item" [toggleable]="true">
+  <form [formGroup]="todoItemForm" (ngSubmit)="CreateTodoItem()">
+    <div id="TodoFormWrapper">
+      <div id="NameWrapper">
+        <div id="LabelWrapper">
+          <label for="Name">Name</label>
+        </div>
+        <div id="LabelInputWrapper">
+          <input pInputText formControlName="Name" />
+        </div>
       </div>
-      <div id="LabelInputWrapper">
-        <input pInputText formControlName="Name" />
+      <div id="IsCompleteWrapper">
+        <div id="IsCompleteLabelWrapper">
+          <label for="IsCompleteInput">{{
+            todoItemForm.controls['IsComplete'].value
+              ? 'Complete'
+              : 'Incomplete'
+          }}</label>
+        </div>
+        <p-inputSwitch
+          formControlName="IsComplete"
+          id="IsCompleteInput"
+        ></p-inputSwitch>
+      </div>
+      <div id="ButtonWrapper">
+        <div id="SubmitButtonWrapper">
+          <div id="SubmitButtonLabelWrapper">
+            <label for="SubmitButton">&nbsp;</label>
+          </div>
+          <button
+            id="submitButton"
+            type="submit"
+            pButton
+            label="Create"
+            icon="pi pi-clone"
+            iconPos="right"
+            class="ui-button ui-button-success ui-button-raised"
+            [disabled]="!todoItemForm.valid"
+          ></button>
+        </div>
+        <div id="CancelButtonWrapper">
+          <div id="CancelButtonLabelWrapper">
+            <label for="CancelButton">&nbsp;</label>
+          </div>
+          <button
+            type="button"
+            pButton
+            icon="pi pi-times"
+            iconPos="right"
+            class="ui-button ui-button-warning ui-button-raised"
+            (click)="Clear()"
+            label="Clear"
+          ></button>
+        </div>
       </div>
     </div>
-    <div id="IsCompleteWrapper">
-      <div id="IsCompleteLabelWrapper">
-        <label for="IsCompleteInput">{{
-          todoItemForm.controls['IsComplete'].value ? 'Complete' : 'Incomplete'
-        }}</label>
-      </div>
-      <p-inputSwitch
-        formControlName="IsComplete"
-        id="IsCompleteInput"
-      ></p-inputSwitch>
-    </div>
-    <div id="SubmitButtonWrapper">
-      <button
-        type="submit"
-        pButton
-        label="Create"
-        icon="pi pi-clone"
-        class="ui-button ui-button-success ui-button-raised"
-        [disabled]="!todoItemForm.valid"
-      ></button>
-    </div>
-  </div>
-</form>
-<button
-  type="button"
-  pButton
-  icon="pi pi-times"
-  iconPos="right"
-  class="ui-button ui-button-warning ui-button-raised"
-  (click)="Clear()"
-  label="Clear"
-></button>
+  </form>
+</p-fieldset>
 <div id="TodoItemTable">
   <p-table
     [columns]="tableColumns"
