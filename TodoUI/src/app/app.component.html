@@ -1,3 +1,6 @@
+<p-toast></p-toast>
+<button pButton type="button" label="Test Button" icon="pi pi-check" iconPos="right"
+    class="ui-button ui-button-raised ui-button-error" (click)="DisplayThings()"></button>
 <div *ngFor="let todoItem of todoItems$ | async">
     {{todoItem.Id}}
     {{todoItem.Name}}

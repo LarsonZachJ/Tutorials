@@ -1,6 +1,6 @@
 import { NgModule, ModuleWithProviders } from "@angular/core";
 import { CommonModule } from '@angular/common';
-import { TodoService } from '@app/core';
+import { TodoService, ToastService } from '@app/core';
 
 @NgModule({
     exports: [],
@@ -12,7 +12,7 @@ export class CoreModule {
     static forRoot(): ModuleWithProviders {
         return {
             ngModule: CoreModule,
-            providers: [TodoService]
+            providers: [TodoService, ToastService],
         }
     }
 }
