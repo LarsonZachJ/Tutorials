@@ -1,0 +1,40 @@
+#TodoFormWrapper {
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 10px;
+  #NameWrapper {
+    grid-column: 1/2;
+    grid-row: 1;
+  }
+  #IsCompleteWrapper {
+    grid-column: 2/3;
+    grid-row: 1;
+  }
+  #ButtonWrapper {
+    grid-column: 3/4;
+    grid-row: 1;
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: 1fr 1fr;
+    #SubmitButtonWrapper {
+      grid-column: 1/2;
+    }
+    #ClearButtonWrapper {
+      grid-column: 2/3;
+    }
+  }
+}
+#TodoItemTable {
+  margin: 0 auto;
+  width: 95%;
+  .TableButtonWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+button {
+  width: 100%;
+}
