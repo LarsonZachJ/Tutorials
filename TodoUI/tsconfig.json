@@ -3,14 +3,11 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "@app/*": [
-        "src/app/*"
-      ],
-      "@env/*": [
-        "src/env/*"
-      ]
+      "@app/*": ["src/app/*"],
+      "@env/*": ["src/env/*"]
     },
     "outDir": "./dist/out-tsc",
+    "watch": true,
     "sourceMap": true,
     "declaration": false,
     "downlevelIteration": true,
@@ -20,12 +17,7 @@
     "moduleResolution": "node",
     "importHelpers": true,
     "target": "es2015",
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "lib": [
-      "es2018",
-      "dom"
-    ]
+    "typeRoots": ["node_modules/@types"],
+    "lib": ["es2018", "dom"]
   }
 }
