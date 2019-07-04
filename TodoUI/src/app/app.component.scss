@@ -1,0 +1,26 @@
+#TodoFormWrapper {
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 10px;
+  #NameWrapper {
+    grid-column: 1/2;
+    grid-row: 1;
+  }
+  #IsCompleteWrapper {
+    grid-column: 2/3;
+    grid-row: 1;
+  }
+  #SubmitButtonWrapper {
+    grid-column: 3/4;
+    grid-row: 1;
+  }
+}
+#TodoItemTable {
+  margin: 0 auto;
+  .TableButtonWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

@@ -1,9 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { TodoService, ToastService } from '@app/core';
-import { Observable } from 'rxjs';
 import { TodoItem, TableColumn } from '@app/shared';
 import { Table } from 'primeng/table';
 import { SelectItem, Dropdown } from 'primeng/primeng';
+import {
+  FormBuilder,
+  FormGroup,
+  FormControl,
+  Validators
+} from '@angular/forms';
 
 @Component({
   selector: 'app-root',
@@ -13,14 +18,55 @@ import { SelectItem, Dropdown } from 'primeng/primeng';
 export class AppComponent implements OnInit {
   @ViewChild('todoTable', { static: false }) todoTable: Table;
   @ViewChild('booleanDropDown', { static: false }) booleanDropDown: Dropdown;
-  todoItems$: Observable<Array<TodoItem>>;
+  todoItemForm: FormGroup;
+  todoItems: Array<TodoItem>;
   tableColumns: Array<TableColumn>;
   selectedTodoItem: TodoItem;
   booleanOptions: Array<SelectItem>;
   emptySelectFilter: SelectItem;
 
+  public Clear(): void {
+    this.todoTable.reset();
+    this.booleanDropDown.selectedOption = this.emptySelectFilter;
+    this.todoItemForm.reset();
+  }
+
+  public CreateTodoItem(): void {
+    const newItem = this.todoItemForm.value;
+    this._todoService.CreateTodoItem(newItem).subscribe(
+      res => {
+        this.todoItems.push(res);
+        this.todoItems = [...this.todoItems];
+      },
+      err => console.error(err)
+    );
+  }
+
+  public ToggleTodoItem(todoItem: TodoItem) {
+    const objectCopy: TodoItem = new TodoItem();
+    Object.assign(objectCopy, todoItem);
+    objectCopy.IsComplete = !objectCopy.IsComplete;
+    this._todoService.UpdateTodoItem(objectCopy).subscribe(
+      res => {
+        const index = this.todoItems.findIndex(t => t.Id === res.Id);
+        this.todoItems[index] = res;
+        this.todoItems = [...this.todoItems];
+        this._toastService.DisplaySuccess(
+          'Success',
+          `Todo Item ${res.Id} has been marked ${
+            res.IsComplete ? 'complete' : 'incomplete'
+          }`
+        );
+      },
+      err => console.error(err)
+    );
+  }
+
   ngOnInit(): void {
-    this.todoItems$ = this._todoService.GetAllTodoItems();
+    this.BuildForm();
+    this._todoService
+      .GetAllTodoItems()
+      .subscribe(res => (this.todoItems = res), err => console.error(err));
     this.emptySelectFilter = { label: 'Select Filter...', value: null };
     this.booleanOptions = [
       this.emptySelectFilter,
@@ -34,13 +80,19 @@ export class AppComponent implements OnInit {
     ];
   }
 
-  public Clear(): void {
-    this.todoTable.reset();
-    this.booleanDropDown.selectedOption = this.emptySelectFilter;
+  private BuildForm(): void {
+    this.todoItemForm = this._fb.group({
+      Name: new FormControl(null, Validators.compose([Validators.required])),
+      IsComplete: new FormControl(
+        false,
+        Validators.compose([Validators.required])
+      )
+    });
   }
 
   constructor(
     private _todoService: TodoService,
-    private _toastService: ToastService
+    private _toastService: ToastService,
+    private _fb: FormBuilder
   ) {}
 }

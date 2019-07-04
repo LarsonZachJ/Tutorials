@@ -7,7 +7,6 @@
       "@env/*": ["src/env/*"]
     },
     "outDir": "./dist/out-tsc",
-    "watch": true,
     "sourceMap": true,
     "declaration": false,
     "downlevelIteration": true,

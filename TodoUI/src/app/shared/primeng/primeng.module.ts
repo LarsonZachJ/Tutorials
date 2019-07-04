@@ -3,7 +3,8 @@ import {
   MessageService,
   ButtonModule,
   InputTextModule,
-  DropdownModule
+  DropdownModule,
+  InputSwitchModule
 } from 'primeng/primeng';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
@@ -14,7 +15,8 @@ import { ToastModule } from 'primeng/toast';
     ToastModule,
     TableModule,
     InputTextModule,
-    DropdownModule
+    DropdownModule,
+    InputSwitchModule
   ],
   providers: [MessageService]
 })

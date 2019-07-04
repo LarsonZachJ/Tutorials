@@ -9,6 +9,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { SharedModule } from './shared/shared.module';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/primeng';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [AppComponent],
@@ -19,7 +20,9 @@ import { MessageService } from 'primeng/primeng';
     CoreModule.forRoot(),
     HttpClientModule,
     ToastModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    ReactiveFormsModule,
+    FormsModule
   ],
   providers: [MessageService],
   bootstrap: [AppComponent]
