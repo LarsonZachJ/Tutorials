@@ -11,9 +11,7 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/primeng';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
+  declarations: [AppComponent],
   imports: [
     SharedModule,
     BrowserModule,
@@ -26,4 +24,4 @@ import { MessageService } from 'primeng/primeng';
   providers: [MessageService],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}
