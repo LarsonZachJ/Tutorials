@@ -1,12 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 
 import { Product } from '@app/products';
 import { ProductService } from '@app/products/service';
 import { Store, select } from '@ngrx/store';
 import * as fromProduct from '@app/products/state';
 import * as productActions from '@app/products/state/actions';
+import { takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'app-product-list',
@@ -14,12 +15,13 @@ import * as productActions from '@app/products/state/actions';
   styleUrls: ['./product-list.component.scss']
 })
 export class ProductListComponent implements OnInit, OnDestroy {
+  componentActive = true;
   pageTitle = 'Products';
-  errorMessage: string;
+  errorMessage$: Observable<string>;
 
   displayCode: boolean;
 
-  products: Product[];
+  products$: Observable<Array<Product>>;
 
   // Used to highlight the selected product in the list
   selectedProduct: Product | null;
@@ -37,26 +39,33 @@ export class ProductListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.errorMessage$ = this.store.pipe(select(fromProduct.getError));
+
     this.store
-      .pipe(select(fromProduct.getCurrentProduct))
+      .pipe(
+        select(fromProduct.getCurrentProduct),
+        takeWhile(() => this.componentActive)
+      )
       .subscribe((currentProduct) => (this.selectedProduct = currentProduct));
 
-    this.productService
-      .getProducts()
-      .subscribe(
-        (products: Product[]) => (this.products = products),
-        (err: any) => (this.errorMessage = err.error)
-      );
+    this.store.dispatch(new productActions.Load());
+
+    this.products$ = this.store.pipe(select(fromProduct.getProducts));
 
     // TODO: Unsubscribe
     this.store
-      .pipe(select(fromProduct.getShowProductCode))
+      .pipe(
+        select(fromProduct.getShowProductCode),
+        takeWhile(() => this.componentActive)
+      )
       .subscribe((showDisplayCode) => {
         this.displayCode = showDisplayCode;
       });
   }
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void {
+    this.componentActive = false;
+  }
 
   constructor(
     private store: Store<fromProduct.State>,

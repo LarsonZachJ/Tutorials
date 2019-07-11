@@ -7,6 +7,7 @@ export interface ProductState {
   showProductCode: boolean;
   currentProduct: Product;
   products: Array<Product>;
+  error: string;
 }
 
 export interface State extends fromRoot.RootState {
@@ -16,7 +17,8 @@ export interface State extends fromRoot.RootState {
 const initialState: ProductState = {
   showProductCode: true,
   currentProduct: null,
-  products: new Array<Product>()
+  products: new Array<Product>(),
+  error: ''
 };
 
 const getProductFeatureState = createFeatureSelector<ProductState>('products');
@@ -34,6 +36,11 @@ export const getProducts = createSelector(
 export const getCurrentProduct = createSelector(
   getProductFeatureState,
   (state) => state.currentProduct
+);
+
+export const getError = createSelector(
+  getProductFeatureState,
+  (state) => state.error
 );
 
 export function productReducer(
@@ -67,12 +74,18 @@ export function productReducer(
           starRating: 0
         }
       };
-    case ProductActionTypes.Load:
-      return null;
     case ProductActionTypes.LoadSuccess:
-      return null;
+      return {
+        ...state,
+        products: action.payload,
+        error: ''
+      };
     case ProductActionTypes.LoadFail:
-      return null;
+      return {
+        ...state,
+        products: new Array<Product>(),
+        error: action.payload
+      };
 
     default:
       return state;
