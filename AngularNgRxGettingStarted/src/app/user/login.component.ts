@@ -2,8 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
-import { AuthService } from './auth.service';
+import { AuthService } from '@app/user/service';
 import { Store, select } from '@ngrx/store';
+
+import * as fromUser from '@app/user/state';
 
 @Component({
   templateUrl: './login.component.html',
@@ -44,15 +46,15 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     // TODO: Unsubscribe
-    this.store.pipe(select('users')).subscribe((users) => {
-      if (users) {
-        this.maskUserName = users.maskUserName;
-      }
-    });
+    this.store
+      .pipe(select(fromUser.getMaskUserName))
+      .subscribe((maskUserName) => {
+        this.maskUserName = maskUserName;
+      });
   }
 
   constructor(
-    private store: Store<any>,
+    private store: Store<fromUser.UserState>,
     private authService: AuthService,
     private router: Router
   ) {}

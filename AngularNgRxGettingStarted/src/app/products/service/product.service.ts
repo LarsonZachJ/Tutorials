@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of, BehaviorSubject, throwError } from 'rxjs';
 import { catchError, tap, map } from 'rxjs/operators';
 
-import { Product } from './product';
+import { Product } from '@app/products';
 
 @Injectable({
   providedIn: 'root'

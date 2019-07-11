@@ -3,10 +3,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { Subscription } from 'rxjs';
 
-import { Product } from '../product';
-import { ProductService } from '../product.service';
-import { GenericValidator } from 'src/app/shared/generic.validator';
-import { NumberValidators } from 'src/app/shared/number.validators';
+import { Product } from '@app/products';
+import { ProductService } from '@app/products/service';
+import { GenericValidator, NumberValidators } from '@app/shared';
 
 @Component({
   selector: 'app-product-edit',
