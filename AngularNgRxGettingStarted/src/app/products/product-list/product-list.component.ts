@@ -23,10 +23,20 @@ export class ProductListComponent implements OnInit, OnDestroy {
   selectedProduct: Product | null;
   sub: Subscription;
 
-  constructor(
-    private store: Store<any>,
-    private productService: ProductService
-  ) {}
+  checkChanged(value: boolean): void {
+    this.store.dispatch({
+      type: 'TOGGLE_PRODUCT_CODE',
+      payload: value
+    });
+  }
+
+  newProduct(): void {
+    this.productService.changeSelectedProduct(this.productService.newProduct());
+  }
+
+  productSelected(product: Product): void {
+    this.productService.changeSelectedProduct(product);
+  }
 
   ngOnInit(): void {
     this.sub = this.productService.selectedProductChanges$.subscribe(
@@ -52,18 +62,8 @@ export class ProductListComponent implements OnInit, OnDestroy {
     this.sub.unsubscribe();
   }
 
-  checkChanged(value: boolean): void {
-    this.store.dispatch({
-      type: 'TOGGLE_PRODUCT_CODE',
-      payload: value
-    });
-  }
-
-  newProduct(): void {
-    this.productService.changeSelectedProduct(this.productService.newProduct());
-  }
-
-  productSelected(product: Product): void {
-    this.productService.changeSelectedProduct(product);
-  }
+  constructor(
+    private store: Store<any>,
+    private productService: ProductService
+  ) {}
 }
