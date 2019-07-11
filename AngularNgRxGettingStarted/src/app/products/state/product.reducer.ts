@@ -1,6 +1,7 @@
 import { Product } from '@app/products';
 import * as fromRoot from '@app/state';
 import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { ProductAction, ProductActionTypes } from '@app/products/state/actions';
 
 export interface ProductState {
   showProductCode: boolean;
@@ -15,7 +16,7 @@ export interface State extends fromRoot.RootState {
 const initialState: ProductState = {
   showProductCode: true,
   currentProduct: null,
-  products: []
+  products: new Array<Product>()
 };
 
 const getProductFeatureState = createFeatureSelector<ProductState>('products');
@@ -30,13 +31,48 @@ export const getProducts = createSelector(
   (state) => state.products
 );
 
-export function productReducer(state = initialState, action): ProductState {
+export const getCurrentProduct = createSelector(
+  getProductFeatureState,
+  (state) => state.currentProduct
+);
+
+export function productReducer(
+  state = initialState,
+  action: ProductAction
+): ProductState {
   switch (action.type) {
-    case 'TOGGLE_PRODUCT_CODE':
+    case ProductActionTypes.ToggleProductCode:
       return {
         ...state,
         showProductCode: action.payload
       };
+    case ProductActionTypes.ClearCurrentProduct:
+      return {
+        ...state,
+        currentProduct: null
+      };
+    case ProductActionTypes.SetCurrentProduct:
+      return {
+        ...state,
+        currentProduct: { ...action.payload }
+      };
+    case ProductActionTypes.InitializeCurrentProduct:
+      return {
+        ...state,
+        currentProduct: {
+          description: '',
+          id: 0,
+          productCode: 'New',
+          productName: '',
+          starRating: 0
+        }
+      };
+    case ProductActionTypes.Load:
+      return null;
+    case ProductActionTypes.LoadSuccess:
+      return null;
+    case ProductActionTypes.LoadFail:
+      return null;
 
     default:
       return state;

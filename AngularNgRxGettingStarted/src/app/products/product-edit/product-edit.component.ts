@@ -6,6 +6,10 @@ import { Subscription } from 'rxjs';
 import { Product } from '@app/products';
 import { ProductService } from '@app/products/service';
 import { GenericValidator, NumberValidators } from '@app/shared';
+import { Store, select } from '@ngrx/store';
+import * as fromRoot from '@app/state';
+import * as fromProduct from '@app/products/state';
+import * as productActions from '@app/products/state/actions';
 
 @Component({
   selector: 'app-product-edit',
@@ -18,7 +22,6 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   productForm: FormGroup;
 
   product: Product | null;
-  sub: Subscription;
 
   // Use with the generic validation message class
   displayMessage: { [key: string]: string } = {};
@@ -70,13 +73,13 @@ export class ProductEditComponent implements OnInit, OnDestroy {
         this.productService
           .deleteProduct(this.product.id)
           .subscribe(
-            () => this.productService.changeSelectedProduct(null),
+            () => this.store.dispatch(new productActions.ClearCurrentProduct()),
             (err: any) => (this.errorMessage = err.error)
           );
       }
     } else {
       // No need to delete, it was never saved
-      this.productService.changeSelectedProduct(null);
+      this.store.dispatch(new productActions.ClearCurrentProduct());
     }
   }
 
@@ -92,14 +95,20 @@ export class ProductEditComponent implements OnInit, OnDestroy {
           this.productService
             .createProduct(p)
             .subscribe(
-              (product) => this.productService.changeSelectedProduct(product),
+              (product) =>
+                this.store.dispatch(
+                  new productActions.SetCurrentProduct(product)
+                ),
               (err: any) => (this.errorMessage = err.error)
             );
         } else {
           this.productService
             .updateProduct(p)
             .subscribe(
-              (product) => this.productService.changeSelectedProduct(product),
+              (product) =>
+                this.store.dispatch(
+                  new productActions.SetCurrentProduct(product)
+                ),
               (err: any) => (this.errorMessage = err.error)
             );
         }
@@ -122,9 +131,9 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     });
 
     // Watch for changes to the currently selected product
-    this.sub = this.productService.selectedProductChanges$.subscribe(
-      (selectedProduct) => this.displayProduct(selectedProduct)
-    );
+    this.store
+      .pipe(select(fromProduct.getCurrentProduct))
+      .subscribe((currentProduct) => this.displayProduct(currentProduct));
 
     // Watch for value changes
     this.productForm.valueChanges.subscribe(
@@ -135,11 +144,13 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     );
   }
 
-  ngOnDestroy(): void {
-    this.sub.unsubscribe();
-  }
+  ngOnDestroy(): void {}
 
-  constructor(private fb: FormBuilder, private productService: ProductService) {
+  constructor(
+    private fb: FormBuilder,
+    private productService: ProductService,
+    private store: Store<fromProduct.State>
+  ) {
     // Defines all of the validation messages for the form.
     // These could instead be retrieved from a file or database.
     this.validationMessages = {
