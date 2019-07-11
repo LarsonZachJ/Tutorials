@@ -26,58 +26,6 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   private validationMessages: { [key: string]: { [key: string]: string } };
   private genericValidator: GenericValidator;
 
-  constructor(private fb: FormBuilder, private productService: ProductService) {
-    // Defines all of the validation messages for the form.
-    // These could instead be retrieved from a file or database.
-    this.validationMessages = {
-      productName: {
-        required: 'Product name is required.',
-        minlength: 'Product name must be at least three characters.',
-        maxlength: 'Product name cannot exceed 50 characters.'
-      },
-      productCode: {
-        required: 'Product code is required.'
-      },
-      starRating: {
-        range: 'Rate the product between 1 (lowest) and 5 (highest).'
-      }
-    };
-
-    // Define an instance of the validator for use with this form,
-    // passing in this form's set of validation messages.
-    this.genericValidator = new GenericValidator(this.validationMessages);
-  }
-
-  ngOnInit(): void {
-    // Define the form group
-    this.productForm = this.fb.group({
-      productName: [
-        '',
-        [Validators.required, Validators.minLength(3), Validators.maxLength(50)]
-      ],
-      productCode: ['', Validators.required],
-      starRating: ['', NumberValidators.range(1, 5)],
-      description: ''
-    });
-
-    // Watch for changes to the currently selected product
-    this.sub = this.productService.selectedProductChanges$.subscribe(
-      (selectedProduct) => this.displayProduct(selectedProduct)
-    );
-
-    // Watch for value changes
-    this.productForm.valueChanges.subscribe(
-      (value) =>
-        (this.displayMessage = this.genericValidator.processMessages(
-          this.productForm
-        ))
-    );
-  }
-
-  ngOnDestroy(): void {
-    this.sub.unsubscribe();
-  }
-
   // Also validate on blur
   // Helpful if the user tabs through required fields
   blur(): void {
@@ -160,5 +108,57 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     } else {
       this.errorMessage = 'Please correct the validation errors.';
     }
+  }
+
+  ngOnInit(): void {
+    // Define the form group
+    this.productForm = this.fb.group({
+      productName: [
+        '',
+        [Validators.required, Validators.minLength(3), Validators.maxLength(50)]
+      ],
+      productCode: ['', Validators.required],
+      starRating: ['', NumberValidators.range(1, 5)],
+      description: ''
+    });
+
+    // Watch for changes to the currently selected product
+    this.sub = this.productService.selectedProductChanges$.subscribe(
+      (selectedProduct) => this.displayProduct(selectedProduct)
+    );
+
+    // Watch for value changes
+    this.productForm.valueChanges.subscribe(
+      (value) =>
+        (this.displayMessage = this.genericValidator.processMessages(
+          this.productForm
+        ))
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.sub.unsubscribe();
+  }
+
+  constructor(private fb: FormBuilder, private productService: ProductService) {
+    // Defines all of the validation messages for the form.
+    // These could instead be retrieved from a file or database.
+    this.validationMessages = {
+      productName: {
+        required: 'Product name is required.',
+        minlength: 'Product name must be at least three characters.',
+        maxlength: 'Product name cannot exceed 50 characters.'
+      },
+      productCode: {
+        required: 'Product code is required.'
+      },
+      starRating: {
+        range: 'Rate the product between 1 (lowest) and 5 (highest).'
+      }
+    };
+
+    // Define an instance of the validator for use with this form,
+    // passing in this form's set of validation messages.
+    this.genericValidator = new GenericValidator(this.validationMessages);
   }
 }

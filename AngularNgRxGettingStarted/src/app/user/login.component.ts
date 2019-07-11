@@ -15,21 +15,6 @@ export class LoginComponent implements OnInit {
 
   maskUserName: boolean;
 
-  constructor(
-    private store: Store<any>,
-    private authService: AuthService,
-    private router: Router
-  ) {}
-
-  ngOnInit(): void {
-    // TODO: Unsubscribe
-    this.store.pipe(select('users')).subscribe((users) => {
-      if (users) {
-        this.maskUserName = users.maskUserName;
-      }
-    });
-  }
-
   cancel(): void {
     this.router.navigate(['welcome']);
   }
@@ -56,4 +41,19 @@ export class LoginComponent implements OnInit {
       this.errorMessage = 'Please enter a user name and password.';
     }
   }
+
+  ngOnInit(): void {
+    // TODO: Unsubscribe
+    this.store.pipe(select('users')).subscribe((users) => {
+      if (users) {
+        this.maskUserName = users.maskUserName;
+      }
+    });
+  }
+
+  constructor(
+    private store: Store<any>,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 }
