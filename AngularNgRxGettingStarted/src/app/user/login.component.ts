@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
@@ -8,12 +8,14 @@ import { Store, select } from '@ngrx/store';
 import * as fromUser from '@app/user/state';
 import * as fromRoot from '@app/state';
 import * as userActions from '@app/user/state/actions';
+import { takeWhile } from 'rxjs/operators';
 
 @Component({
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
+  componentActive = true;
   pageTitle = 'Log In';
   errorMessage: string;
 
@@ -44,12 +46,18 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // TODO: Unsubscribe
     this.store
-      .pipe(select(fromUser.getMaskUserName))
+      .pipe(
+        select(fromUser.getMaskUserName),
+        takeWhile(() => this.componentActive)
+      )
       .subscribe((maskUserName) => {
         this.maskUserName = maskUserName;
       });
+  }
+
+  ngOnDestroy(): void {
+    this.componentActive = false;
   }
 
   constructor(
