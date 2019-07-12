@@ -5,7 +5,7 @@ import { ProductAction, ProductActionTypes } from '@app/products/state/actions';
 
 export interface ProductState {
   showProductCode: boolean;
-  currentProduct: Product;
+  currentProductId: number | null;
   products: Array<Product>;
   error: string;
 }
@@ -16,7 +16,7 @@ export interface State extends fromRoot.RootState {
 
 const initialState: ProductState = {
   showProductCode: true,
-  currentProduct: null,
+  currentProductId: null,
   products: new Array<Product>(),
   error: ''
 };
@@ -33,9 +33,29 @@ export const getProducts = createSelector(
   (state) => state.products
 );
 
+export const getCurrentProductId = createSelector(
+  getProductFeatureState,
+  (state) => state.currentProductId
+);
+
 export const getCurrentProduct = createSelector(
   getProductFeatureState,
-  (state) => state.currentProduct
+  getCurrentProductId,
+  (state: ProductState, currentProductId: number) => {
+    if (currentProductId === 0) {
+      return {
+        id: 0,
+        productName: '',
+        productCode: 'New',
+        description: '',
+        starRating: 0
+      };
+    } else {
+      return currentProductId
+        ? state.products.find((p) => p.id === currentProductId)
+        : null;
+    }
+  }
 );
 
 export const getError = createSelector(
@@ -56,23 +76,17 @@ export function productReducer(
     case ProductActionTypes.ClearCurrentProduct:
       return {
         ...state,
-        currentProduct: null
+        currentProductId: null
       };
     case ProductActionTypes.SetCurrentProduct:
       return {
         ...state,
-        currentProduct: { ...action.payload }
+        currentProductId: action.payload.id
       };
     case ProductActionTypes.InitializeCurrentProduct:
       return {
         ...state,
-        currentProduct: {
-          description: '',
-          id: 0,
-          productCode: 'New',
-          productName: '',
-          starRating: 0
-        }
+        currentProductId: 0
       };
     case ProductActionTypes.LoadSuccess:
       return {
@@ -84,6 +98,47 @@ export function productReducer(
       return {
         ...state,
         products: new Array<Product>(),
+        error: action.payload
+      };
+    case ProductActionTypes.UpdateProductSuccess:
+      const updatedProducts = state.products.map((item) =>
+        item.id === action.payload.id ? action.payload : item
+      );
+
+      return {
+        ...state,
+        currentProductId: action.payload.id,
+        products: updatedProducts,
+        error: ''
+      };
+    case ProductActionTypes.UpdateProductFail:
+      return {
+        ...state,
+        error: action.payload
+      };
+
+    case ProductActionTypes.CreateProductSuccess:
+      const copyProducts = [...state.products];
+      copyProducts.push(action.payload);
+      return {
+        ...state,
+        error: '',
+        products: copyProducts
+      };
+    case ProductActionTypes.CreateProductFail:
+      return { ...state, error: action.payload };
+    case ProductActionTypes.DeleteProductSuccess:
+      const deleteCopy = state.products.filter(
+        (p) => p.id !== state.currentProductId
+      );
+      return {
+        ...state,
+        error: '',
+        products: deleteCopy
+      };
+    case ProductActionTypes.DeleteProductFail:
+      return {
+        ...state,
         error: action.payload
       };
 
