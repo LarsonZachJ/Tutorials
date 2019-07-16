@@ -18,7 +18,7 @@ import { ProductEditGuard } from './edit/product-edit-guard.service';
       { path: ':id', component: ProductDetailComponent },
       {
         path: ':id/edit',
-        canDeactivate: [ ProductEditGuard ],
+        canDeactivate: [ProductEditGuard],
         component: ProductEditComponent
       }
     ])
@@ -28,9 +28,6 @@ import { ProductEditGuard } from './edit/product-edit-guard.service';
     ProductDetailComponent,
     ProductEditComponent
   ],
-  providers: [
-    ProductService,
-    ProductEditGuard
-  ]
+  providers: [ProductService, ProductEditGuard]
 })
-export class ProductModule { }
+export class ProductModule {}
