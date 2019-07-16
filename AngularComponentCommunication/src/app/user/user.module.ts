@@ -10,16 +10,9 @@ import { SharedModule } from '../shared/shared.module';
 @NgModule({
   imports: [
     SharedModule,
-    RouterModule.forChild([
-      { path: 'login', component: LoginComponent }
-    ])
+    RouterModule.forChild([{ path: 'login', component: LoginComponent }])
   ],
-  declarations: [
-    LoginComponent
-  ],
-  providers: [
-    AuthService,
-    AuthGuard
-  ]
+  declarations: [LoginComponent],
+  providers: [AuthService, AuthGuard]
 })
-export class UserModule { }
+export class UserModule {}
