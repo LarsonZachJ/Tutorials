@@ -7,6 +7,8 @@ import {
   Input,
   OnChanges,
   SimpleChanges,
+  Output,
+  EventEmitter,
 } from '@angular/core';
 import { NgModel } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
@@ -18,7 +20,9 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 })
 export class CriteriaComponent implements OnInit, AfterViewInit, OnChanges {
   @ViewChild('filterElement', { static: false }) filterElementRef: ElementRef;
+  @ViewChild(NgModel, { static: false }) filterInput: NgModel;
 
+  @Output() filterChange: EventEmitter<string> = new EventEmitter<string>();
   @Input()
   displayDetail: boolean;
 
@@ -27,7 +31,16 @@ export class CriteriaComponent implements OnInit, AfterViewInit, OnChanges {
 
   hitMessage: string;
 
-  listFilter: string;
+  private _listFilter: string;
+
+  get listFilter(): string {
+    return this._listFilter;
+  }
+
+  set listFilter(value: string) {
+    this._listFilter = value;
+    this.filterChange.emit(this.listFilter);
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.hitCount.currentValue) {
