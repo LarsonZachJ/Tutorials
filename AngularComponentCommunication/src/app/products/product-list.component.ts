@@ -1,36 +1,25 @@
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  AfterViewInit,
-  ElementRef,
-  ViewChildren,
-  QueryList,
-} from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
 import { IProduct } from './product';
 import { ProductService } from './product.service';
-import { NgModel } from '@angular/forms';
-import { debounce, debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
+import { CriteriaComponent } from '@app/shared/criteria/criteria.component';
 
 @Component({
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.css'],
 })
-export class ProductListComponent implements OnInit, AfterViewInit {
-  @ViewChild('filterElement', { static: false }) filterElementRef: ElementRef;
-
-  @ViewChild(NgModel, { static: false }) filterInput: NgModel;
-
+export class ProductListComponent implements OnInit {
   pageTitle: string = 'Product List';
-  // listFilter: string;
+  @ViewChild(CriteriaComponent, { static: false })
+  filterComponent: CriteriaComponent;
+
+  parentListFilter: string;
   showImage: boolean;
+  includeDetail: boolean = true;
 
   imageWidth: number = 50;
   imageMargin: number = 2;
   errorMessage: string;
-  listFilter: string;
 
   filteredProducts: IProduct[];
   products: IProduct[];
@@ -58,24 +47,14 @@ export class ProductListComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.filterInput.valueChanges
-      .pipe(
-        debounceTime(250),
-        distinctUntilChanged()
-      )
-      .subscribe(changes => {
-        this.performFilter(changes);
-        console.log(`Performed the filter`);
-      });
-
-    this.filterElementRef.nativeElement.focus();
+    this.parentListFilter = this.filterComponent.listFilter;
   }
 
   ngOnInit(): void {
     this.productService.getProducts().subscribe(
       (products: IProduct[]) => {
         this.products = products;
-        this.performFilter(this.listFilter);
+        this.performFilter(this.parentListFilter);
       },
       (error: any) => (this.errorMessage = <any>error)
     );
