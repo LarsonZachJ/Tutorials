@@ -7,7 +7,7 @@ import { ProductService } from '../product.service';
 
 @Component({
   templateUrl: './product-edit.component.html',
-  styleUrls: ['./product-edit.component.css']
+  styleUrls: ['./product-edit.component.css'],
 })
 export class ProductEditComponent implements OnInit {
   @ViewChild(NgForm, { static: true }) editForm: NgForm;
@@ -27,7 +27,7 @@ export class ProductEditComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.route.params.subscribe((params) => {
+    this.route.params.subscribe(params => {
       const id = +params['id'];
       this.getProduct(id);
     });
@@ -37,8 +37,8 @@ export class ProductEditComponent implements OnInit {
     this.productService
       .getProduct(id)
       .subscribe(
-        (product) => this.onProductRetrieved(product),
-        (error) => (this.errorMessage = <any>error)
+        product => this.onProductRetrieved(product),
+        error => (this.errorMessage = <any>error)
       );
   }
 
@@ -84,9 +84,7 @@ export class ProductEditComponent implements OnInit {
       this.productService.saveProduct(this.product).subscribe(
         () => {
           // Assign the changes from the copy
-          Object.keys(this.product).forEach(
-            (key) => (this.originalProduct[key] = this.product[key])
-          );
+          this.originalProduct = { ...this.originalProduct, ...this.product };
           this.onSaveComplete();
         },
         (error: any) => (this.errorMessage = <any>error)

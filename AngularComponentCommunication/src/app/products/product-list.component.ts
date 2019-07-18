@@ -1,13 +1,28 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  AfterViewInit,
+  ElementRef,
+  ViewChildren,
+  QueryList,
+} from '@angular/core';
 
 import { IProduct } from './product';
 import { ProductService } from './product.service';
+import { NgModel } from '@angular/forms';
+import { debounce, debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 
 @Component({
   templateUrl: './product-list.component.html',
-  styleUrls: ['./product-list.component.css']
+  styleUrls: ['./product-list.component.css'],
 })
-export class ProductListComponent implements OnInit {
+export class ProductListComponent implements OnInit, AfterViewInit {
+  @ViewChild('filterElement', { static: false }) filterElementRef: ElementRef;
+
+  @ViewChild(NgModel, { static: false }) filterInput: NgModel;
+
   pageTitle: string = 'Product List';
   // listFilter: string;
   showImage: boolean;
@@ -15,35 +30,14 @@ export class ProductListComponent implements OnInit {
   imageWidth: number = 50;
   imageMargin: number = 2;
   errorMessage: string;
-
-  private _listFilter: string;
-  get listFilter(): string {
-    return this._listFilter;
-  }
-
-  set listFilter(value: string) {
-    this._listFilter = value;
-    this.performFilter(this.listFilter);
-  }
+  listFilter: string;
 
   filteredProducts: IProduct[];
   products: IProduct[];
 
-  constructor(private productService: ProductService) {}
-
-  ngOnInit(): void {
-    this.productService.getProducts().subscribe(
-      (products: IProduct[]) => {
-        this.products = products;
-        this.performFilter(this.listFilter);
-      },
-      (error: any) => (this.errorMessage = <any>error)
-    );
-  }
-
   // onFilterChange(filter: string): void {
-  //     this.listFilter = filter;
-  //     this.performFilter(this.listFilter);
+  //   this.listFilter = filter;
+  //   this.performFilter(this.listFilter);
   // }
 
   toggleImage(): void {
@@ -62,4 +56,30 @@ export class ProductListComponent implements OnInit {
       this.filteredProducts = this.products;
     }
   }
+
+  ngAfterViewInit(): void {
+    this.filterInput.valueChanges
+      .pipe(
+        debounceTime(250),
+        distinctUntilChanged()
+      )
+      .subscribe(changes => {
+        this.performFilter(changes);
+        console.log(`Performed the filter`);
+      });
+
+    this.filterElementRef.nativeElement.focus();
+  }
+
+  ngOnInit(): void {
+    this.productService.getProducts().subscribe(
+      (products: IProduct[]) => {
+        this.products = products;
+        this.performFilter(this.listFilter);
+      },
+      (error: any) => (this.errorMessage = <any>error)
+    );
+  }
+
+  constructor(private productService: ProductService) {}
 }
