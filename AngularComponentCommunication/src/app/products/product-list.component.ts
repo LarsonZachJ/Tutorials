@@ -33,6 +33,10 @@ export class ProductListComponent implements OnInit {
     this.showImage = !this.showImage;
   }
 
+  onFilterChange(filterValue: string): void {
+    this.performFilter(filterValue);
+  }
+
   performFilter(filterBy?: string): void {
     if (filterBy) {
       this.filteredProducts = this.products.filter(

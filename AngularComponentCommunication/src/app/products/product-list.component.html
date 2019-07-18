@@ -10,6 +10,7 @@
         class="col-md-10"
         [displayDetail]="includeDetail"
         [hitCount]="filteredProducts?.length"
+        (filterChange)="onFilterChange($event)"
       ></app-criteria>
     </div>
     <div class="table-responsive">
