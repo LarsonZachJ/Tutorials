@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { NgModel } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { ProductParamterService } from '@app/products/product-paramter.service';
 
 @Component({
   selector: 'app-criteria',
@@ -31,14 +32,12 @@ export class CriteriaComponent implements OnInit, AfterViewInit, OnChanges {
 
   hitMessage: string;
 
-  private _listFilter: string;
-
   get listFilter(): string {
-    return this._listFilter;
+    return this.productParameterService.filterBy;
   }
 
   set listFilter(value: string) {
-    this._listFilter = value;
+    this.productParameterService.filterBy = value;
     this.filterChange.emit(this.listFilter);
   }
 
@@ -54,5 +53,5 @@ export class CriteriaComponent implements OnInit, AfterViewInit, OnChanges {
     this.filterElementRef.nativeElement.focus();
   }
   ngOnInit(): void {}
-  constructor() {}
+  constructor(private productParameterService: ProductParamterService) {}
 }
