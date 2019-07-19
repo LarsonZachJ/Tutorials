@@ -59,14 +59,14 @@ export class ProductListComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    this.parentListFilter = this.filterComponent.listFilter;
+    this.filterComponent.listFilter = this.productParameterService.filterBy;
   }
 
   ngOnInit(): void {
     this.productService.getProducts().subscribe(
       (products: IProduct[]) => {
         this.products = products;
-        this.filterComponent.listFilter = this.productParameterService.filterBy;
+        this.performFilter(this.productParameterService.filterBy);
       },
       (error: any) => (this.errorMessage = <any>error)
     );

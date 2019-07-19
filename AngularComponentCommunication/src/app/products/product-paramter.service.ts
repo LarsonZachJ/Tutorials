@@ -4,8 +4,8 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class ProductParamterService {
-  showImage: boolean;
-  filterBy: string;
+  showImage: boolean = false;
+  filterBy: string = '';
 
   constructor() {}
 }

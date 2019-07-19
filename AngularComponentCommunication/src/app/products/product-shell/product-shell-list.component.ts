@@ -5,12 +5,16 @@ import { ProductService } from '../product.service';
 
 @Component({
   selector: 'app-product-shell-list',
-  templateUrl: './product-shell-list.component.html'
+  templateUrl: './product-shell-list.component.html',
 })
 export class ProductShellListComponent implements OnInit {
   pageTitle: string = 'Products';
   errorMessage: string;
   products: IProduct[];
+
+  onSelected(product: IProduct) {
+    this.productService.currentProduct = product;
+  }
 
   constructor(private productService: ProductService) {}
 
