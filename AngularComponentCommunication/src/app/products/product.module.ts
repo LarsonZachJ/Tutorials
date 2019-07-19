@@ -9,6 +9,7 @@ import { ProductEditComponent } from './edit/product-edit.component';
 
 import { ProductService } from './product.service';
 import { ProductEditGuard } from './edit/product-edit-guard.service';
+import { ProductParamterService } from './product-paramter.service';
 
 @NgModule({
   imports: [
@@ -19,15 +20,15 @@ import { ProductEditGuard } from './edit/product-edit-guard.service';
       {
         path: ':id/edit',
         canDeactivate: [ProductEditGuard],
-        component: ProductEditComponent
-      }
-    ])
+        component: ProductEditComponent,
+      },
+    ]),
   ],
   declarations: [
     ProductListComponent,
     ProductDetailComponent,
-    ProductEditComponent
+    ProductEditComponent,
   ],
-  providers: [ProductService, ProductEditGuard]
+  providers: [ProductService, ProductEditGuard, ProductParamterService],
 })
 export class ProductModule {}
