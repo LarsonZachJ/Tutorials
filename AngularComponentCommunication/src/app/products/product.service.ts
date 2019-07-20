@@ -8,14 +8,19 @@ import {
 import { catchError, tap } from 'rxjs/operators';
 
 import { IProduct } from './product';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, of, throwError, Subject, BehaviorSubject } from 'rxjs';
 
 @Injectable()
 export class ProductService {
   private productsUrl = 'api/products';
   private products: Array<IProduct>;
 
-  currentProduct: IProduct | null;
+  private selectedProductSource = new BehaviorSubject<IProduct | null>(null);
+  selectedProductChanges$ = this.selectedProductSource.asObservable();
+
+  changeSelectedProduct(selectedProduct: IProduct | null): void {
+    this.selectedProductSource.next(selectedProduct);
+  }
 
   constructor(private http: HttpClient) {}
 
@@ -74,7 +79,7 @@ export class ProductService {
       tap(
         data => (this.products = this.products.filter(item => item.id !== id))
       ),
-      tap(data => (this.currentProduct = null)),
+      tap(data => this.changeSelectedProduct(null)),
       catchError(this.handleError)
     );
   }
@@ -97,7 +102,7 @@ export class ProductService {
       .pipe(
         tap(data => console.log('createProduct: ' + JSON.stringify(data))),
         tap(data => this.products.push(data)),
-        tap(data => (this.currentProduct = data)),
+        tap(data => this.changeSelectedProduct(data)),
         catchError(this.handleError)
       );
   }
