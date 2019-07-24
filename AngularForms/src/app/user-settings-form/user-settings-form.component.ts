@@ -15,20 +15,27 @@ export class UserSettingsFormComponent implements OnInit {
   postError: boolean = false;
   postErrorMessage: string = '';
   subscriptionTypes$: Observable<Array<string>>;
+  singleModel: string = 'On';
+  startDate: Date;
+  startTime: Date;
+  userRating: number;
+  maxRating: number;
+  isReadOnly: boolean;
 
   onSubmit(form: NgForm) {
-    console.log('in onSubmit: ', form.valid);
-    if (form.valid) {
-      this._dataService
-        .postUserSettingsForm(this.userSettings)
-        .subscribe(
-          result => console.log('success: ', result),
-          error => this.onHttpError(error)
-        );
-    } else {
-      this.postError = true;
-      this.postErrorMessage = 'Please fix the above errors';
-    }
+    console.log(form.value);
+    // console.log('in onSubmit: ', form.valid);
+    // if (form.valid) {
+    //   this._dataService
+    //     .postUserSettingsForm(this.userSettings)
+    //     .subscribe(
+    //       result => console.log('success: ', result),
+    //       error => this.onHttpError(error)
+    //     );
+    // } else {
+    //   this.postError = true;
+    //   this.postErrorMessage = 'Please fix the above errors';
+    // }
   }
 
   onHttpError(errorResponse: any) {
@@ -42,6 +49,10 @@ export class UserSettingsFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.isReadOnly = false;
+    this.startDate = new Date();
+    this.startTime = new Date();
+    this.maxRating = 10;
     this.originalUserSettings = {
       name: null,
       emailOffers: null,
