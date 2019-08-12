@@ -97,14 +97,7 @@ export class CustomerComponent implements OnInit {
       notification: ['email'],
       rating: [null, ratingRange(1, 5)],
       sendCatalog: true,
-      addresses: this._fb.group({
-        addressType: ['home'],
-        streetAddress1: '',
-        streetAddress2: '',
-        city: '',
-        state: '',
-        zipCode: '',
-      }),
+      addresses: this.buildAddress(),
     });
 
     this.customerForm.get('notification').valueChanges.subscribe(changes => {
@@ -145,6 +138,18 @@ export class CustomerComponent implements OnInit {
       .pipe(debounceTime(1000))
       .subscribe(changes => this.setPhoneMessage(phoneControl));
   }
+
+  buildAddress(): FormGroup {
+    return this._fb.group({
+      addressType: ['home'],
+      streetAddress1: '',
+      streetAddress2: '',
+      city: '',
+      state: '',
+      zipCode: '',
+    });
+  }
+
   populateTestData(): void {
     this.customerForm.patchValue({
       firstName: 'Jack',
