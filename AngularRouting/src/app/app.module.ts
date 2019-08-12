@@ -24,17 +24,13 @@ import { MessageModule } from './messages/message.module';
     RouterModule.forRoot([
       { path: 'welcome', component: WelcomeComponent },
       { path: '', redirectTo: 'welcome', pathMatch: 'full' },
-      { path: '**', component: PageNotFoundComponent }
+      { path: '**', component: PageNotFoundComponent },
     ]),
     ProductModule,
     UserModule,
-    MessageModule
+    MessageModule,
   ],
-  declarations: [
-    AppComponent,
-    WelcomeComponent,
-    PageNotFoundComponent
-  ],
-  bootstrap: [AppComponent]
+  declarations: [AppComponent, WelcomeComponent, PageNotFoundComponent],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
