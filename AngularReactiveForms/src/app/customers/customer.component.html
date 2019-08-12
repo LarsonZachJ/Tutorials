@@ -17,29 +17,11 @@
             placeholder="First Name (required)"
             formControlName="firstName"
             [ngClass]="{
-              'is-invalid':
-                (customerForm.get('firstName').touched ||
-                  customerForm.get('firstName').dirty) &&
-                !customerForm.get('firstName').valid
+              'is-invalid': firstNameMessage
             }"
           />
           <span class="invalid-feedback">
-            <span
-              *ngIf="
-                customerForm.get('firstName').errors &&
-                customerForm.get('firstName').errors['required']
-              "
-            >
-              Please enter your first name.
-            </span>
-            <span
-              *ngIf="
-                customerForm.get('firstName').errors &&
-                customerForm.get('firstName').errors['minlength']
-              "
-            >
-              The first name must be longer than 3 characters.
-            </span>
+            {{ firstNameMessage }}
           </span>
         </div>
       </div>
@@ -56,29 +38,11 @@
             placeholder="Last Name (required)"
             formControlName="lastName"
             [ngClass]="{
-              'is-invalid':
-                (customerForm.get('lastName').touched ||
-                  customerForm.get('lastName').dirty) &&
-                !customerForm.get('lastName').valid
+              'is-invalid': lastNameMessage
             }"
           />
           <span class="invalid-feedback">
-            <span
-              *ngIf="
-                customerForm.get('lastName').errors &&
-                customerForm.get('lastName').errors['required']
-              "
-            >
-              Please enter your last name.
-            </span>
-            <span
-              *ngIf="
-                customerForm.get('lastName').errors &&
-                customerForm.get('lastName').errors['maxlength']
-              "
-            >
-              The last name must be less than 50 characters.
-            </span>
+            {{ lastNameMessage }}
           </span>
         </div>
       </div>
@@ -94,11 +58,7 @@
               placeholder="Email (required)"
               formControlName="email"
               [ngClass]="{
-                'is-invalid':
-                  customerForm.get('emailGroup').errors ||
-                  ((customerForm.get('emailGroup.email').touched ||
-                    customerForm.get('emailGroup.email').dirty) &&
-                    !customerForm.get('emailGroup.email').valid)
+                'is-invalid': emailMessage
               }"
             />
             <span class="invalid-feedback">
@@ -118,30 +78,11 @@
               placeholder="Confirm Email (required)"
               formControlName="confirmEmail"
               [ngClass]="{
-                'is-invalid':
-                  customerForm.get('emailGroup').errors ||
-                  ((customerForm.get('emailGroup.confirmEmail').touched ||
-                    customerForm.get('emailGroup.confirmEmail').dirty) &&
-                    !customerForm.get('emailGroup.confirmEmail').valid)
+                'is-invalid': confirmEmailMessage
               }"
             />
             <span class="invalid-feedback">
-              <span
-                *ngIf="
-                  customerForm.get('emailGroup.confirmEmail').errors &&
-                  customerForm.get('emailGroup.confirmEmail').errors['required']
-                "
-              >
-                Please confirm your email address.
-              </span>
-              <span
-                *ngIf="
-                  customerForm.get('emailGroup').errors &&
-                  customerForm.get('emailGroup').errors['compareEmail']
-                "
-              >
-                The confirmation does not match the email address.
-              </span>
+              {{ confirmEmailMessage }}
             </span>
           </div>
         </div>
@@ -155,15 +96,11 @@
             type="tel"
             placeholder="Phone"
             formControlName="phone"
-            [ngClass]="{ 'is-invalid': !customerForm.get('phone').valid }"
+            [ngClass]="{ 'is-invalid': phoneMessage }"
           />
-          <span
-            *ngIf="
-              customerForm.get('phone').errors &&
-              customerForm.get('phone').errors['required']
-            "
-            >Please enter your phone number</span
-          >
+          <span class="invalid-feedback">
+            {{ phoneMessage }}
+          </span>
         </div>
       </div>
 
@@ -204,21 +141,12 @@
             type="number"
             formControlName="rating"
             [ngClass]="{
-              'is-invalid':
-                (customerForm.get('rating').touched ||
-                  customerForm.get('rating').dirty) &&
-                !customerForm.get('rating').valid
+              'is-invalid': ratingMessage
             }"
           />
           <span class="invalid-feedback">
-            <span
-              *ngIf="
-                customerForm.get('rating').errors &&
-                customerForm.get('rating').errors['range']
-              "
-            ></span>
-            Please rate your experience from 1 to 5</span
-          >
+            {{ ratingMessage }}
+          </span>
         </div>
       </div>
 
