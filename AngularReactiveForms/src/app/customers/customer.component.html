@@ -102,22 +102,7 @@
               }"
             />
             <span class="invalid-feedback">
-              <span
-                *ngIf="
-                  customerForm.get('emailGroup.email').errors &&
-                  customerForm.get('emailGroup.email').errors['required']
-                "
-              >
-                Please enter your email address.
-              </span>
-              <span
-                *ngIf="
-                  customerForm.get('emailGroup.email').errors &&
-                  customerForm.get('emailGroup.email').errors['email']
-                "
-              >
-                Please enter a valid email address.
-              </span>
+              {{ emailMessage }}
             </span>
           </div>
         </div>
@@ -192,7 +177,6 @@
                 type="radio"
                 value="email"
                 formControlName="notification"
-                (change)="setNotificiation($event.target.value)"
               />
               Email
             </label>
@@ -204,7 +188,6 @@
                 type="radio"
                 value="text"
                 formControlName="notification"
-                (change)="setNotificiation($event.target.value)"
               />
               Text
             </label>

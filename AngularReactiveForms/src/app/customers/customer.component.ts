@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
+import { debounceTime } from 'rxjs/operators';
 import { Customer } from './customer';
 import {
   FormGroup,
@@ -40,6 +40,12 @@ function compareEmail(c: AbstractControl): { [key: string]: boolean } | null {
   styleUrls: ['./customer.component.css'],
 })
 export class CustomerComponent implements OnInit {
+  emailMessage: string;
+
+  private validationMessages = {
+    required: 'Please enter your email address.',
+    email: 'Please enter a valid email address.',
+  };
   customer = new Customer();
 
   customerForm: FormGroup;
@@ -64,6 +70,15 @@ export class CustomerComponent implements OnInit {
       rating: [null, ratingRange(1, 5)],
       sendCatalog: true,
     });
+
+    this.customerForm.get('notification').valueChanges.subscribe(changes => {
+      this.setNotificiation(changes);
+    });
+
+    const emailControl = this.customerForm.get('emailGroup.email');
+    emailControl.valueChanges
+      .pipe(debounceTime(1000))
+      .subscribe(changes => this.setMessage(emailControl));
   }
   populateTestData(): void {
     this.customerForm.patchValue({
@@ -76,6 +91,16 @@ export class CustomerComponent implements OnInit {
   save() {
     console.log(this.customerForm);
     console.log('Saved: ' + JSON.stringify(this.customerForm.value));
+  }
+
+  setMessage(control: AbstractControl): void {
+    this.emailMessage = '';
+
+    if ((control.touched || control.dirty) && control.errors) {
+      this.emailMessage = Object.keys(control.errors)
+        .map(key => (this.emailMessage += this.validationMessages[key]))
+        .join(' ');
+    }
   }
 
   setNotificiation(notifyVia: string): void {
