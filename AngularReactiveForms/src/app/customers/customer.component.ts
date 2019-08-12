@@ -144,6 +144,10 @@ export class CustomerComponent implements OnInit {
       .subscribe(changes => this.setPhoneMessage(phoneControl));
   }
 
+  addAddress(): void {
+    this.addresses.push(this.buildAddress());
+  }
+
   buildAddress(): FormGroup {
     return this._fb.group({
       addressType: ['home'],
