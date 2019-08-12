@@ -7,6 +7,7 @@ import {
   Validators,
   AbstractControl,
   ValidatorFn,
+  FormArray,
 } from '@angular/forms';
 
 function ratingRange(min: number, max: number): ValidatorFn {
@@ -74,6 +75,10 @@ export class CustomerComponent implements OnInit {
     required: 'Please enter your phone number.',
   };
 
+  get addresses(): FormArray {
+    return <FormArray>this.customerForm.get('addresses');
+  }
+
   customer = new Customer();
 
   customerForm: FormGroup;
@@ -97,7 +102,7 @@ export class CustomerComponent implements OnInit {
       notification: ['email'],
       rating: [null, ratingRange(1, 5)],
       sendCatalog: true,
-      addresses: this.buildAddress(),
+      addresses: this._fb.array([this.buildAddress()]),
     });
 
     this.customerForm.get('notification').valueChanges.subscribe(changes => {
