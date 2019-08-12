@@ -41,11 +41,39 @@ function compareEmail(c: AbstractControl): { [key: string]: boolean } | null {
 })
 export class CustomerComponent implements OnInit {
   emailMessage: string;
+  confirmEmailMessage: string;
+  lastNameMessage: string;
+  firstNameMessage: string;
+  ratingMessage: string;
+  phoneMessage: string;
 
-  private validationMessages = {
+  private firstNameValidationMessages = {
+    required: 'Please enter your first name.',
+    minlength: 'The first name must be longer than 3 characters.',
+  };
+
+  private lastNameValidationMessages = {
+    required: 'Please enter your last name.',
+    maxlength: 'The last numbe must be less than 50 characters',
+  };
+
+  private emailValidationMessages = {
     required: 'Please enter your email address.',
     email: 'Please enter a valid email address.',
   };
+  private confirmEmailValidationMessages = {
+    required: 'Please confirm your email address',
+    compareEmail: 'The confirmation does not match the email address',
+  };
+
+  private ratingValidationMessages = {
+    range: 'Please rate your experience from 1 to 5',
+  };
+
+  private phoneValidationMessages = {
+    required: 'Please enter your phone number.',
+  };
+
   customer = new Customer();
 
   customerForm: FormGroup;
@@ -78,7 +106,36 @@ export class CustomerComponent implements OnInit {
     const emailControl = this.customerForm.get('emailGroup.email');
     emailControl.valueChanges
       .pipe(debounceTime(1000))
-      .subscribe(changes => this.setMessage(emailControl));
+      .subscribe(changes => this.setEmailMessage(emailControl));
+
+    const confirmEmailControl = this.customerForm.get(
+      'emailGroup.confirmEmail'
+    );
+    const emailGroup = this.customerForm.get('emailGroup');
+    confirmEmailControl.valueChanges
+      .pipe(debounceTime(1000))
+      .subscribe(changes =>
+        this.setConfirmEmailMessage(emailGroup, confirmEmailControl)
+      );
+
+    const lastNameControl = this.customerForm.get('lastName');
+    lastNameControl.valueChanges
+      .pipe(debounceTime(1000))
+      .subscribe(changes => this.setLastNameMessage(lastNameControl));
+
+    const firstNameControl = this.customerForm.get('firstName');
+    firstNameControl.valueChanges
+      .pipe(debounceTime(1000))
+      .subscribe(changes => this.setFirstNameMessage(firstNameControl));
+
+    const ratingControl = this.customerForm.get('rating');
+    ratingControl.valueChanges
+      .pipe(debounceTime(1000))
+      .subscribe(changes => this.setRatingMessage(ratingControl));
+    const phoneControl = this.customerForm.get('phone');
+    phoneControl.valueChanges
+      .pipe(debounceTime(1000))
+      .subscribe(changes => this.setPhoneMessage(phoneControl));
   }
   populateTestData(): void {
     this.customerForm.patchValue({
@@ -93,12 +150,92 @@ export class CustomerComponent implements OnInit {
     console.log('Saved: ' + JSON.stringify(this.customerForm.value));
   }
 
-  setMessage(control: AbstractControl): void {
+  setPhoneMessage(control: AbstractControl): void {
+    this.phoneMessage = '';
+
+    if ((control.touched || control.dirty) && control.errors) {
+      this.phoneMessage = Object.keys(control.errors)
+        .map(key => (this.phoneMessage += this.phoneValidationMessages[key]))
+        .join(' ');
+    }
+  }
+
+  setRatingMessage(control: AbstractControl): void {
+    this.ratingMessage = '';
+
+    if ((control.touched || control.dirty) && control.errors) {
+      this.ratingMessage = Object.keys(control.errors)
+        .map(key => (this.ratingMessage += this.ratingValidationMessages[key]))
+        .join(' ');
+    }
+  }
+
+  setFirstNameMessage(control: AbstractControl): void {
+    this.firstNameMessage = '';
+
+    if ((control.touched || control.dirty) && control.errors) {
+      this.firstNameMessage = Object.keys(control.errors)
+        .map(
+          key =>
+            (this.firstNameMessage += this.firstNameValidationMessages[key])
+        )
+        .join(' ');
+    }
+  }
+
+  setLastNameMessage(control: AbstractControl): void {
+    this.lastNameMessage = '';
+
+    if ((control.touched || control.dirty) && control.errors) {
+      this.lastNameMessage = Object.keys(control.errors)
+        .map(
+          key => (this.lastNameMessage += this.lastNameValidationMessages[key])
+        )
+        .join(' ');
+    }
+  }
+
+  setConfirmEmailMessage(
+    emailGroupControl: AbstractControl,
+    confirmEmailControl: AbstractControl
+  ): void {
+    this.confirmEmailMessage = '';
+
+    if (
+      (emailGroupControl.touched || emailGroupControl.dirty) &&
+      emailGroupControl.errors
+    ) {
+      this.confirmEmailMessage = Object.keys(emailGroupControl.errors)
+        .map(
+          key =>
+            (this.confirmEmailMessage += this.confirmEmailValidationMessages[
+              key
+            ])
+        )
+        .join(' ');
+    }
+
+    if (
+      (confirmEmailControl.touched || confirmEmailControl.dirty) &&
+      confirmEmailControl.errors
+    ) {
+      this.confirmEmailMessage = Object.keys(confirmEmailControl.errors)
+        .map(
+          key =>
+            (this.confirmEmailMessage += this.confirmEmailValidationMessages[
+              key
+            ])
+        )
+        .join(' ');
+    }
+  }
+
+  setEmailMessage(control: AbstractControl): void {
     this.emailMessage = '';
 
     if ((control.touched || control.dirty) && control.errors) {
       this.emailMessage = Object.keys(control.errors)
-        .map(key => (this.emailMessage += this.validationMessages[key]))
+        .map(key => (this.emailMessage += this.emailValidationMessages[key]))
         .join(' ');
     }
   }
@@ -111,5 +248,6 @@ export class CustomerComponent implements OnInit {
       phoneControl.clearValidators();
     }
     phoneControl.updateValueAndValidity();
+    this.setPhoneMessage(phoneControl);
   }
 }
