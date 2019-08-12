@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
+import { debounceTime } from 'rxjs/operators';
 import { Customer } from './customer';
 import {
   FormGroup,
@@ -76,9 +76,9 @@ export class CustomerComponent implements OnInit {
     });
 
     const emailControl = this.customerForm.get('emailGroup.email');
-    emailControl.valueChanges.subscribe(changes =>
-      this.setMessage(emailControl)
-    );
+    emailControl.valueChanges
+      .pipe(debounceTime(1000))
+      .subscribe(changes => this.setMessage(emailControl));
   }
   populateTestData(): void {
     this.customerForm.patchValue({
