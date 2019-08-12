@@ -97,12 +97,14 @@ export class CustomerComponent implements OnInit {
       notification: ['email'],
       rating: [null, ratingRange(1, 5)],
       sendCatalog: true,
-      addressType: ['home'],
-      streetAddress1: '',
-      streetAddress2: '',
-      city: '',
-      state: '',
-      zipCode: '',
+      addresses: this._fb.group({
+        addressType: ['home'],
+        streetAddress1: '',
+        streetAddress2: '',
+        city: '',
+        state: '',
+        zipCode: '',
+      }),
     });
 
     this.customerForm.get('notification').valueChanges.subscribe(changes => {
